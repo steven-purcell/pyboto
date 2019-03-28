@@ -4,8 +4,8 @@ import pandas as pd
 
 class Boto:
 
-    def __init__(self):
-        pass
+    def __init__(self, region='us-east-1'):
+        self.__region = region
 
 
 # ##########################################################################
