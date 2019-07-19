@@ -1,5 +1,5 @@
 # pyboto
-Wrapper for commonly used boto3 operations in S3, ECR, and others.
+Wrapper for commonly used boto3 when working with data stored in AWS S3.
 
 ## Install
 
@@ -15,18 +15,20 @@ More help on configuring the aws cli here https://docs.aws.amazon.com/cli/latest
 ```
 import pyboto
 
-boto_object = pyboto.Boto('us-east-1')
-result = boto_object.get_keys('myBucket', 'myKeyPrefix')
+boto_obj = pyboto.Boto('us-east-1')
+result = boto_obj.get_keys('myBucket', 'myKeyPrefix')
 print(result)
 ```
 
 ## Full Usage
 ```
-pyboto.get_keys('myBucket', 'myKeyPrefix')
+boto_obj.get_keys('myBucket', 'myKeyPrefix')
 
-pyboto.get_csv('myBucket', 'myKey')
+boto_obj.get_file('myBucket', 'myKey')
 
-pyboto.put_csv('myBucket', 'myKey', pandas_dataframe, header: bool, index: bool)
+boto_obj.put_df('myBucket', 'myKey', pandas_dataframe, header: bool, index: bool, sep=',')
+
+boto_obj.put_file(bucket='g2l-dev', key='tmp/test.csv', file_or_buffer=contents)
 ```
 
 ## Note
