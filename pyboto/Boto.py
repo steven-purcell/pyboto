@@ -7,7 +7,6 @@ from botocore.exceptions import ClientError
 
 class Boto:
 
-    __s3_path_regex = '^s3:\/\/[a-zA-Z0-9.\-_\/]*$'
 
     def __init__(self, region='us-east-1'):
         self.__region = region
@@ -15,7 +14,6 @@ class Boto:
             region = boto3.session.Session().region_name
             if region is None:
                 raise Exceptions.NoRegionFoundError("No default aws region configuration found. Must specify a region.")
-        self.__athena = boto3.client('athena', region_name=region)
         self.__s3 = boto3.client('s3', region_name=region)
 
 
