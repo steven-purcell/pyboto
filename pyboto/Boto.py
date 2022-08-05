@@ -1,7 +1,11 @@
 import boto3
+import io
 from io import StringIO, BytesIO
 import pandas as pd
-import Exceptions
+try:
+    import exceptions
+except ImportError:
+    import builtins as exceptions
 from botocore.exceptions import ClientError
 
 
@@ -69,12 +73,12 @@ class Boto:
 
 
     # ##########################################################################
-    def get_csv_as_df(self, bucket: str, key: str, sep=','):
+    def get_csv_as_df(self, bucket: str, key: str, sep=',', skiprows=None, encoding='utf-8', dict_dtypes=None, index=None):
 
         try:
             s3_client = boto3.client('s3')
             obj = s3_client.get_object(Bucket=bucket, Key=key)
-            df = pd.read_csv(BytesIO(obj['Body'].read()), names=None, skiprows=None, header='infer', sep=sep)
+            df = pd.read_csv(BytesIO(obj['Body'].read()), names=None, skiprows=skiprows, header='infer', sep=sep, encoding=encoding, dtype=dict_dtypes, index_col=index)
         except ClientError as e:
             raise e
 
@@ -96,7 +100,7 @@ class Boto:
 
 
     # ##########################################################################
-    def get_keys(self, bucket: str, prefix: str):
+    def get_keys(self, bucket: str, prefix = ''):
         try:
             s3_client = boto3.client('s3')
             result = s3_client.list_objects(
@@ -114,3 +118,38 @@ class Boto:
 
         return object_list
 
+    # ##########################################################################
+    def get_excel(self, bucket: str, key: str, engine = None):
+        try:
+            s3_client = boto3.client('s3')
+            obj = s3_client.get_object(Bucket=bucket, Key=key)
+            bytes_obj = BytesIO(obj['Body'].read())
+            excelfile = pd.ExcelFile(bytes_obj, engine = engine)
+        except ClientError as e:
+            raise e
+
+        return excelfile
+
+    # ##########################################################################
+    def put_excel(self, bucket: str, key: str, dataframe, header: bool,index: bool):
+        with io.BytesIO() as output:
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                dataframe.to_excel(writer,sheet_name='Sheet1',header=header,index=index)
+            data = output.getvalue()
+        try:
+            s3_client = boto3.client('s3')
+            result = s3_client.put_object(
+                Body=data,
+                Bucket=bucket,
+                Key=key,
+            )
+            metadata = result['ResponseMetadata']
+            key_check = self.get_keys(bucket, key)[0]
+            response = {'HTTPStatusCode': str(metadata['HTTPStatusCode']),
+                        'Key': key_check['Key'],
+                        'LastModified': key_check['LastModified']
+                        }
+        except ClientError as e:
+            raise e
+
+        return response
