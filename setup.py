@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='pyboto',
-    version='v0.1.0',
+    version='v0.1.1',
     license='Mozilla Public License Version 2.0',
     author='steven-purcell',
     url='https://github.com/steven-purcell/pyboto',
@@ -14,9 +14,9 @@ setuptools.setup(
     long_description=long_description,
     packages=setuptools.find_packages(),
     install_requires=[
-        'pandas>=0.22.0',
-        'boto3>=1.9.90',
-        'botocore>=1.12.90'
+        'pandas>=1.4.3',
+        'boto3>=1.24.46',
+        'botocore>=1.27.46'
     ],
     description='A simple boto3 wrapper to complete common operations in S3 such as '
                 'get or put csv files, list objects and keys, etc.'
