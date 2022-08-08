@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='pyboto',
-    version='v0.1.1',
+    version='v0.1.2',
     license='Mozilla Public License Version 2.0',
     author='steven-purcell',
     url='https://github.com/steven-purcell/pyboto',
