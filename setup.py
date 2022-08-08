@@ -14,7 +14,7 @@ setuptools.setup(
     long_description=long_description,
     packages=setuptools.find_packages(),
     install_requires=[
-        'pandas>=1.4.3',
+        'pandas',
         'boto3>=1.24.46',
         'botocore>=1.27.46'
     ],
